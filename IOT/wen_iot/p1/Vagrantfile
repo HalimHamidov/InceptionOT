@@ -1,0 +1,55 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$master_script = <<-SCRIPT
+mkdir -p /root/.ssh
+cat /tmp/id_rsa.pub >> /root/.ssh/authorized_keys
+
+curl -sfL https://get.k3s.io | sh -s - server \
+    --write-kubeconfig-mode 644 \
+    --flannel-iface=eth1
+SCRIPT
+
+$worker_script = <<-SCRIPT
+mkdir -p /root/.ssh
+mv /tmp/id_rsa  /root/.ssh
+scp -o StrictHostKeyChecking=no root@192.168.42.110:/var/lib/rancher/k3s/server/token /tmp/token
+curl -sfL https://get.k3s.io | sh -s - agent \
+    --server "https://192.168.42.110:6443" \
+    --token-file "/tmp/token" \
+    --flannel-iface=eth1
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  # common config
+  config.vm.box = "centos/7"
+  config.vm.provider "virtualbox" do |v|
+    v.cpus = 1
+    v.memory = 1024
+    v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+    v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  end
+  config.vm.provision "shell", inline: "yum install -y net-tools" # install ifconfig
+
+  # master config
+  config.vm.define "yewenS" do |master|
+    master.vm.hostname = "yewenS"
+    master.vm.network "private_network", ip: "192.168.42.110"
+    master.vm.provider "virtualbox" do |v|
+      v.customize ["modifyvm", :id, "--name", "yewenS"]
+    end
+    master.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "/tmp/id_rsa.pub"
+    master.vm.provision "shell", inline: $master_script
+  end
+
+  # worker config
+  config.vm.define "yewenSW" do |worker|
+    worker.vm.hostname = "yewenSW"
+    worker.vm.network "private_network", ip: "192.168.42.111"
+    worker.vm.provider "virtualbox" do |v|
+      v.customize ["modifyvm", :id, "--name", "yewenSW"]
+    end
+    config.vm.provision "file", source: "~/.ssh/id_rsa", destination: "/tmp/id_rsa"
+    worker.vm.provision "shell", inline: $worker_script
+  end
+end
