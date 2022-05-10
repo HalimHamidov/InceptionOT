@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-login = "mevelyne"
+login = "apearl"
 
 server_name = "#{login}S"
 server_ip   = "192.168.56.110"
