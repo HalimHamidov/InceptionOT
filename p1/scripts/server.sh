@@ -1,11 +1,7 @@
 #!/bin/bash
 
-# Turn off firewalld
+# Turn off firewalld just for educational goals
 sudo systemctl disable firewalld.service --now
-
-# Disable swap
-# sudo swapoff -a
-# sudo sed -i 's/^\(.*swap.*\)$/#\1/' /etc/fstab
 
 # for ifconfig
 sudo dnf -y install net-tools
