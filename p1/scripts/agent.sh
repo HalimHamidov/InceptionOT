@@ -23,7 +23,7 @@ echo "TOKEN = $TOKEN"
 sudo systemctl disable firewalld.service --now
 
 # for ifconfig
-sudo dnf -y install net-tools
+sudo yum -y install net-tools
 
 # Install k3s
 export INSTALL_K3S_EXEC="--node-ip=$NODE_IP"
