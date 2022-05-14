@@ -1,28 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-three
+  name: app1-deploy
   labels:
-    app: app-three
+    app: app1
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      app: app-three
+      app: app1
   template:
     metadata:
       labels:
-        app: app-three
+        app: app1
     spec:
       containers:
-      - name: hello-kubernetes
-        image: paulbouwer/hello-kubernetes:1.10
-        imagePullPolicy: IfNotPresent
+      - name: simple-web
+        image: yeasy/simple-web:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 80
         env:
         - name: MESSAGE
-          value: "Hello from app3."
+          value: "Hello from app1."
         - name: KUBERNETES_NAMESPACE
           valueFrom:
             fieldRef:
@@ -47,12 +45,31 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-three
+  name: app1-service
 spec:
   selector:
-    app: app-three
+    app: app1
   ports:
-    - name: http
-      protocol: TCP
+    - protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 80
+---
+
+apiVersion: networking.k8s.io/v1
+kind : Ingress
+metadata:   
+  name  : app1-ingress-controller
+spec: 
+    rules:
+    - host: "app1.com"
+      http: 
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: app1-service
+                port: 
+                  number: 80
+
+---

@@ -1,25 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-two
+  name: app2-deploy
   labels:
-    app: app-two
+    app: app2
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: app-two
+      app: app2
   template:
     metadata:
       labels:
-        app: app-two
+        app: app2
     spec:
       containers:
-      - name: hello-kubernetes
-        image: paulbouwer/hello-kubernetes:1.10
-        imagePullPolicy: IfNotPresent
+      - name: simple-web
+        image   : yeasy/simple-web:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 80
         env:
         - name: MESSAGE
           value: "Hello from app2."
@@ -47,12 +46,31 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-two
+  name: app2-service
 spec:
   selector:
-    app: app-two
+    app: app2
   ports:
-    - name: http
-      protocol: TCP
+    - protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind : Ingress
+metadata:   
+  name  : app2-ingress-controller
+spec: 
+    rules:
+    - host: "app2.com"
+      http: 
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: app2-service
+                port: 
+                  number: 80
+
+---

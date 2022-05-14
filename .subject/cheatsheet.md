@@ -24,6 +24,7 @@ kubectl describe nodes
 
     8  kubectl get nodes
     9  kubectl get pods
+    kubectl get pods --all-namespaces
 # for check hostname
 hostname
 
@@ -46,11 +47,20 @@ kubectl describe pod app-one-7dbc75dbdf-qfk9j
 
 kubectl get ns
 
+ip a | grep eth1
+hostname
+k get deploy
+k get pods
+k logs app-one-7dbc75dbdf-pctxf
+k describe pod app-one-7dbc75dbdf-pctxf
+k get svc
+curl -H "Host:app1.com" 192.168.42.110 | grep LOCAL
+k get ingress
+k get 
 http://192.168.56.110/applications?proj=&sync=Synced&health=&namespace=&cluster=&labels=
 
 
 
 QUESTIONS:
-Why is busy?
-[vagrant@apearlSW ~]$ kubectl get pods
-The connection to the server localhost:8080 was refused - did you specify the right host or port?
+
+https://disk.yandex.ru/d/yamzBDGluAHF3Q/1.mp4
