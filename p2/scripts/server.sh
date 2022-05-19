@@ -30,6 +30,14 @@ curl https://releases.rancher.com/install-docker/19.03.sh | sh
 curl -sfL https://get.k3s.io | sh -s - --docker
 
 
+# Completion
+# write kubectl completion bash is usefull command which could help find commands of kubectl
+# alias kubectl is for shortcut
+# third command is set start command kubectl like 'k', not like 'kubectl'
+echo 'source <(kubectl completion bash)' >> ~/.bashrc
+echo 'alias k=/usr/local/bin/kubectl' >> ~/.bashrc
+echo 'complete -F __start_kubectl k' >> ~/.bashrc
+
 # This 3 one's have configurations for install containers in kubernetes
 /usr/local/bin/kubectl create configmap app1-html --from-file /media/configs/app1/index.html
 /usr/local/bin/kubectl apply -f /media/configs/app1/deployment.yaml
@@ -44,11 +52,3 @@ curl -sfL https://get.k3s.io | sh -s - --docker
 sleep 3
 
 # kubectl apply -f /vagrant/confs/ingressroute.yaml
-
-# Completion
-# write kubectl completion bash is usefull command which could help find commands of kubectl
-# alias kubectl is for shortcut
-# third command is set start command kubectl like 'k', not like 'kubectl'
-echo 'source <(kubectl completion bash)' >> ~/.bashrc
-echo 'alias k=/usr/local/bin/kubectl' >> ~/.bashrc
-echo 'complete -F __start_kubectl k' >> ~/.bashrc
