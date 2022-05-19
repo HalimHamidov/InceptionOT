@@ -1,32 +1,44 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Master node name
-login   = "apearl"
 # Master node static IP
-node_ip = "192.168.42.110"
+MASTER_NODE_IP = "192.168.56.110"
+MASTER_NODE_NAME = 'apearlS'
+
+# common config
+MEM = 4096
+CPU = 4
+BOX = "centos/7"
+BOX_URL = "/Users/a19229108/Desktop/CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box"
+BOX_AUTO_UPDATE = false
+
+$CREAT_SYNC_DIRECTORY = <<-SHELL
+  sudo mkdir /media/configs
+SHELL
+
 
 Vagrant.configure("2") do |config|
-  config.vm.box     = "generic/centos7"
-  config.vm.box_url = "https://app.vagrantup.com/generic/boxes/centos7/versions/3.6.14/providers/virtualbox.box"
-  #config.vm.box_url = "file:///goinfre/apearl/e5907522-6df5-4570-9c1c-6ec9abd45ca5"
-  
-#disabled: false, create: true
-# set directories for sync between host and master
-  config.vm.synced_folder ".", "/vagrant", disabled: false, create: true
-# set hostname to variable
-  config.vm.hostname = "#{login}S-p2"
-# set static IP for master node
-  config.vm.network "private_network", ip: node_ip
-# set instrument virtualbox for apply configs
-  config.vm.provider "virtualbox" do |v|
-    # set static connection with IP
-    v.customize ["modifyvm", :id, "--name", config.vm.hostname]
-    # set configs for launch virtual machine like CPU and memory 
-    v.customize ["modifyvm", :id, "--memory", 2048]
-    v.customize ["modifyvm", :id, "--cpus", 4]
+
+	config.vm.box = BOX
+	config.vm.box_url = BOX_URL
+	#config.vm.box_check_update = BOX_AUTO_UPDATE
+	# config.vm.provision "shell", inline: $CREAT_SYNC_DIRECTORY
+	# чтобы обновилось и добавило возможность монтировать директории, устанавливать синхронизацию
+	config.vbguest.installer_options = { allow_kernel_upgrade: true }
+
+	config.vm.provider "virtualbox" do |v|
+		v.memory = MEM
+		v.cpus = CPU
+	end
+
+	config.vm.define MASTER_NODE_NAME do |master|
+		master.vm.hostname = MASTER_NODE_NAME
+		master.vm.network :private_network, ip: MASTER_NODE_IP
+
+		master.vm.synced_folder ".", "/media/", type: "rsync"
+    	master.vm.provision "shell", privileged: true, path: "scripts/server.sh", args: [MASTER_NODE_IP]
+		master.vm.provider "virtualbox" do |v|
+			v.name = MASTER_NODE_NAME
+    end
   end
-  # set configs for implement bash scripts in virtual machine
-  config.vm.provision "shell", privileged: false, path: "scripts/server.sh", env: {"NODE_IP": node_ip}
-  config.vm.provision "shell", privileged: false, path: "scripts/apply.sh"
 end
