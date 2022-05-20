@@ -1,25 +1,43 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-login   = "apearl"
-node_ip = "192.168.56.110"
+MASTER_NODE_NAME = 'p3-gjigglypuffS'
+MASTER_NODE_IP = '192.168.42.110'
+
+# common config
+MEM = 1024
+CPU = 1
+BOX = "centos/8"
+BOX_URL = "file:///home/denis/CentOS-8-Vagrant-8.3.2011-20201204.2.x86_64.vagrant-virtualbox.box"
+BOX_AUTO_UPDATE = false
+
+# disable firewall so we can have direct ssh access without need to copy our ssh public key to the machine 
+# !!! (NOT RECOMMENDED , USE THE SSH KEYS METHOD IN PRODUCTION ENV, THIS IS ONLY FOR SCHOOL PRACTICING PURPOSE ) !!!
+$DISABLE_FIREWALL_SCRIPT = <<-SHELL
+  sudo systemctl disable --now firewalld
+SHELL
+
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/focal64"
-  config.vm.box_url = "file:///goinfre/apearl/focal-server-cloudimg-amd64-vagrant.box"
 
-  config.vm.synced_folder ".", "/vagrant", disabled: false, create: true
+	config.vm.box = BOX
+	config.vm.box_url = BOX_URL
+	config.vm.box_check_update = BOX_AUTO_UPDATE
+	config.vbguest.installer_options = { allow_kernel_upgrade: true }
+	config.vm.provision "shell", inline: $DISABLE_FIREWALL_SCRIPT 
 
-  config.vm.hostname = "#{login}S-p3"
-  config.vm.network "private_network", ip: node_ip
-  config.vm.network "forwarded_port", guest: 8080, host: 8080, protocol: "tcp"
-  config.vm.network "forwarded_port", guest: 8888, host: 8888, protocol: "tcp"
+	config.vm.provider "virtualbox" do |v|
+		v.memory = MEM
+		v.cpus = CPU
+	end
 
-
-  config.vm.provider "virtualbox" do |v|
-    v.customize ["modifyvm", :id, "--name", config.vm.hostname]
-    v.customize ["modifyvm", :id, "--memory", 4096]
-    v.customize ["modifyvm", :id, "--cpus", 4]
-  end
-  config.vm.provision "shell", privileged: false, path: "scripts/server.sh"
+	config.vm.define MASTER_NODE_NAME do |master|
+		master.vm.hostname = MASTER_NODE_NAME
+		master.vm.network :private_network, ip: MASTER_NODE_IP
+		master.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+		master.vm.provider "virtualbox" do |v|
+			v.name = MASTER_NODE_NAME
+			# v.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/vagrant", "1"]
+		end
+	end
 end
