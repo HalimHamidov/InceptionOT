@@ -1,6 +1,7 @@
 #!/bin/bash
 
 sudo cat /home/vagrant/.ssh/id_rsa.pub  >> /home/vagrant/.ssh/authorized_keys
+sudo mkdir /root/.ssh
 sudo cp -R  /home/vagrant/.ssh/*  /root/.ssh
 
 echo "скачиваем и запускаем докер"
@@ -19,20 +20,20 @@ curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
 k3d cluster create mycluster --port 8888:8888@loadbalancer 
 
 #echo "Устанавливаем AgroCD в класстер k3d"
-sudo kubectl create namespace argocd
-sudo kubectl create namespace dev
-sudo kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-sudo kubectl -n argocd patch svc/argocd-server -p '{"spec": {"type": "LoadBalancer"}}'
-sudo kubectl apply -n argocd -f /home/vagrant/confs/argocd.yaml
-sudo kubectl wait --for=condition=available deployment --all -n argocd --timeout=3m
-sudo kubectl wait --for=condition=ready pod --all -n argocd --timeout=3m
+kubectl create namespace argocd
+kubectl create namespace dev
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl -n argocd patch svc/argocd-server -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl apply -n argocd -f /home/vagrant/confs/argocd.yaml
+kubectl wait --for=condition=available deployment --all -n argocd --timeout=3m
+kubectl wait --for=condition=ready pod --all -n argocd --timeout=3m
 #echo "Парроль ArgoCD"
 echo `kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath={.data.password} | base64 --decode`
 
-#После запуска ВМ можно подключится и пробросить порты
+#После запуска ВМ можно подключится и пробрасить порты
 kubectl port-forward svc/argocd-server -n argocd 8443:443 --address=0.0.0.0&
 
 # После запуска:
-# 1. повторно пробросить порт для argocd: kubectl port-forward svc/argocd-server -n argocd 8443:443 --address=127.0.0.1&
+# 1. повторно пробросить порт для argocd: kubectl port-forward svc/argocd-server -n argocd 8443:443 --address=0.0.0.0&
 # 2. дождаться, когда приложение развернется
 # 3. Проверить приложение: curl http://localhost:8888
