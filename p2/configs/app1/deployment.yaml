@@ -26,10 +26,14 @@ spec:
       - name: html-volume
         configMap:
           name: app1-html
+      env:
+        - name: MESSAGE
+          value: "Hello from app1 TEST."
 
 ---
 apiVersion: v1
 kind: Service
+clusters:
 metadata:
   name: app1-service
 spec:

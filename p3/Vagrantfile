@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
 	config.vm.box = BOX
 	config.vm.box_url = BOX_URL
 	config.vm.box_check_update = BOX_AUTO_UPDATE
-	config.vbguest.installer_options = { allow_kernel_upgrade: true }
+	config.vm.installer_options = { allow_kernel_upgrade: true }
 	config.vm.provision "shell", inline: $DISABLE_FIREWALL_SCRIPT 
 
 	config.vm.provider "virtualbox" do |v|
