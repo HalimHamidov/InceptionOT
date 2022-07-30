@@ -1,14 +1,17 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-MASTER_NODE_NAME = 'p3-gjigglypuffS'
+MASTER_NODE_NAME = 'p3-gjigglypS'
 MASTER_NODE_IP = '192.168.42.110'
 
 # common config
 MEM = 1024
 CPU = 1
-BOX = "centos/8"
-BOX_URL = "file:///home/denis/CentOS-8-Vagrant-8.3.2011-20201204.2.x86_64.vagrant-virtualbox.box"
+BOX = "centos/7"
+## on 21school MacOS only
+##BOX_URL = "file:///home/denis/CentOS-8-Vagrant-8.3.2011-20201204.2.x86_64.vagrant-virtualbox.box"
+## on any another PC (for example, Linux)
+BOX_URL = "https://app.vagrantup.com/generic/boxes/centos7/versions/3.6.14/providers/virtualbox.box"
 BOX_AUTO_UPDATE = false
 
 # disable firewall so we can have direct ssh access without need to copy our ssh public key to the machine 
