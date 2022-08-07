@@ -22,3 +22,14 @@ spec:
         env: 
         - name: MESSAGE
           value: Hello From app2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-two
+spec:
+  selector:
+    app: app-two
+  ports:
+    - port: 80
+      targetPort: 8080

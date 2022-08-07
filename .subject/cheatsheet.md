@@ -1,7 +1,3 @@
-ln -s goinfre/vagrant/ .vagrant.d
-
-lrwxr-xr-x   1 apearl  student    16 Aug  7 13:50 .vagrant.d -> goinfre/vagrant/
-
 
 cd goinfre/
 
@@ -61,6 +57,12 @@ k describe pod app-one-7dbc75dbdf-pctxf
 k get svc
 
 * p2 *
+
+ln -s goinfre/vagrant/ .vagrant.d
+
+lrwxr-xr-x   1 apearl  student    16 Aug  7 13:50 .vagrant.d -> goinfre/vagrant/
+https://chrome.google.com/webstore/detail/modheader/idgpnmonknjnojddfkpgkljpfnnfcklj?hl=ru
+
 
 kubectl get nodes -o wide
 kubectl get all -n kube-system
