@@ -18,10 +18,6 @@ Vagrant.configure("2") do |config| # Строка говорит что буде
   control.vm.provision "file", source: "./confs/deployment2.yaml", destination: "./"
   control.vm.provision "file", source: "./confs/deployment3.yaml", destination: "./"
   control.vm.provision "file", source: "./confs/ingress.yaml", destination: "./"
-  #control.vm.provision "file", source: "./confs/service1.yaml", destination: "./"
-  #control.vm.provision "file", source: "./confs/service2.yaml", destination: "./"
-  #control.vm.provision "file", source: "./confs/service3.yaml", destination: "./"
   control.vm.provision "shell", path: "scripts/apply.sh"
-#  control.vm.provision "shell", inline: $start_script
   end
 end
