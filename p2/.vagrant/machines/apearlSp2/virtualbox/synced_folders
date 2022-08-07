@@ -1,1 +1,0 @@
-{"rsync":{"/media/":{"type":"rsync","guestpath":"/media","hostpath":"/Users/apearl/apearl_config/InceptionOT/p2","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}

@@ -1,1 +1,0 @@
-{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"/Users/a19229108/InceptionOT/p2","disabled":false,"create":true,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}

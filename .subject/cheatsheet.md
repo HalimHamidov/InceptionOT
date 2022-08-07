@@ -1,3 +1,8 @@
+ln -s goinfre/vagrant/ .vagrant.d
+
+lrwxr-xr-x   1 apearl  student    16 Aug  7 13:50 .vagrant.d -> goinfre/vagrant/
+
+
 cd goinfre/
 
 mkdir .vagrant.d
@@ -56,17 +61,17 @@ k describe pod app-one-7dbc75dbdf-pctxf
 k get svc
 
 * p2 *
+
+kubectl get nodes -o wide
+kubectl get all -n kube-system
+kubectl get all 
+curl -H "Host:app2.com" 192.168.57.110
     1  kubectl describe ingress
     2  sudo journalctl -u k3s | tail -n 20
     3  k get ingress
     4  k get svc
-    5  k get ingress
-    6  k get nodes -o wide
-    7  k get all -n kube-system
-    8  history
-    
-    9  k get all
-   10  curl -H "Host:app1.com" 192.168.42.110 | grep LOCAL
+
+   10  curl -H "Host:app1.com" 192.168.57.110 | grep LOCAL
    11  curl -H "Host:app2.com" 192.168.42.110 | grep LOCAL
    12  curl -H "Host:app3.com" 192.168.42.110 | grep LOCAL
    13  curl -H "Host:app3.com" 192.168.42.110 
@@ -96,3 +101,5 @@ https://github.com/k3d-io/k3d/issues/36
 Полезные ссылки 
 
 https://www.youtube.com/c/PowerCertAnimatedVideos
+
+server: https://127.0.0.1:6443

@@ -1,47 +1,52 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+# vagrant файл на одну машину
+$start_script = <<-SCRIPT
+# В нем происходит установка кубера k3s и установка net-tools в нашем случае для того чтобы на centos появилась ifconfig который нам позволит узнаать
+# что у нас действительно тот ip который заявлен в задании 
+sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-*
+sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
+sudo dnf install centos-release-stream -y
+sudo dnf swap centos-{linux,stream}-repos -y
+sudo dnf distro-sync -y
+sudo yum -y install net-tools # для установки сетевых утилит в том числе ifconfig
 
-# Master node static IP
-MASTER_NODE_IP = "192.168.56.110"
-MASTER_NODE_NAME = 'apearlSp2'
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--write-kubeconfig-mode 644 --flannel-iface eth1" sh - # скачка бинарника, установка флагов и старт через sh
+# --write-kubeconfig-mode 644 - Этот флаг разблокирует функцию чтобы можно было сделать k get nodes, что нужно по заданию для того чтобы посмотреть что получился кластер и в нем есть компьютеры
+# --flannel-iface eth1 - Означает что у нас будет использоваться в качестве сети для нашего кубернетиса именно eth1, а eth1 это ничто иное как ip 192.168.42.110
 
-# common config
-MEM = 4096
-CPU = 4
-# BOX = "centos/7"
-BOX   = "generic/centos7"
-# BOX_URL = "/goinfre/apearl/CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box"
-BOX_URL = "https://app.vagrantup.com/generic/boxes/centos7/versions/3.6.14/providers/virtualbox.box"
-BOX_AUTO_UPDATE = false
+# Решаем проблему подключения к кубернетису
+sudo chmod 644 /etc/resolv.conf
+sudo echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
-$CREAT_SYNC_DIRECTORY = <<-SHELL
-  sudo mkdir /media/configs
-SHELL
+# сделаем cubctl конфигурационных файлов которые мы скинули в ходе работы Vagrantfile
+/usr/local/bin/kubectl apply -f ./
 
+echo 'alias k="kubectl"' >>./.bashrc # просто alias для того чтобы команты исполнять как написано в сабжекте типа k get nodes -o wide
 
-Vagrant.configure("2") do |config|
+SCRIPT
 
-	config.vm.box = BOX
-	config.vm.box_url = BOX_URL
-	config.vm.box_check_update = BOX_AUTO_UPDATE
-	#config.vm.box_check_update = BOX_AUTO_UPDATE
-	# config.vm.provision "shell", inline: $CREAT_SYNC_DIRECTORY
-	# чтобы обновилось и добавило возможность монтировать директории, устанавливать синхронизацию
-	#config.vbguest.installer_options = { allow_kernel_upgrade: true }
-
-	config.vm.provider "virtualbox" do |v|
-		v.memory = MEM
-		v.cpus = CPU
-	end
-
-	config.vm.define MASTER_NODE_NAME do |master|
-		master.vm.hostname = MASTER_NODE_NAME
-		master.vm.network :private_network, ip: MASTER_NODE_IP
-
-		master.vm.synced_folder ".", "/media/", type: "rsync"
-    	master.vm.provision "shell", privileged: true, path: "scripts/server.sh", args: [MASTER_NODE_IP]
-		master.vm.provider "virtualbox" do |v|
-			v.name = MASTER_NODE_NAME
-    end
+Vagrant.configure("2") do |config| # Строка говорит что будем использовать конфигурацию Вагранда 2-й версии
+  config.vm.box = "centos/8"  # Используем согласно сабжекту образ последней версии centos.
+   
+  config.vm.box_url = "/Users/apearl/goinfre/CentOS-8-Vagrant-8.3.2011-20201204.2.x86_64.vagrant-virtualbox.box" 
+  
+  config.vm.define "apearlS" do |control| # название машины согласно сабжекту является ником одного из сдающих с S на конце у сервера.
+    control.vm.hostname = "apearlS"
+    control.vm.network "private_network", ip: "192.168.57.110" # Настройка из сабжекта
+    control.vm.provider "virtualbox" do |v|
+      v.customize ["modifyvm", :id, "--name", "apearlS"] # Ресурсы по сабжекту 1 проц, 512 оперативы
+      v.customize ["modifyvm", :id, "--memory", "4096"]
+      v.customize ["modifyvm", :id, "--cpus", "4"]
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"] # 2 строки из старого сабжекта 
+      v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+   end
+	# копирование файлов конфигурации
+  control.vm.provision "file", source: "./confs/deployment1.yaml", destination: "./" # # копирование файла конфигурации для app1. provision "file" это то что будет работа над файлом, source - расположение файла, destination - то куда он будет скопирован
+  control.vm.provision "file", source: "./confs/deployment2.yaml", destination: "./"
+  control.vm.provision "file", source: "./confs/deployment3.yaml", destination: "./"
+  control.vm.provision "file", source: "./confs/ingress.yaml", destination: "./"
+  control.vm.provision "file", source: "./confs/service1.yaml", destination: "./"
+  control.vm.provision "file", source: "./confs/service2.yaml", destination: "./"
+  control.vm.provision "file", source: "./confs/service3.yaml", destination: "./"
+  control.vm.provision "shell", inline: $start_script
   end
 end
