@@ -2,8 +2,10 @@ login   = "apearl"
 node_ip = "192.168.56.110"
 
 Vagrant.configure("2") do |config|
+#  config.vm.box = "ubuntu/focal64"
+ # config.vm.box_url = "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64-vagrant.box"
   config.vm.box = "ubuntu/focal64"
-  config.vm.box_url = "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64-vagrant.box"
+  config.vm.box_url = "/Users/apearl/goinfre/focal-server-cloudimg-amd64-vagrant.box"
 
 
   config.vm.synced_folder ".", "/vagrant", disabled: false, create: true
