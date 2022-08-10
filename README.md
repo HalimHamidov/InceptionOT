@@ -27,3 +27,4 @@ This project aims to introduce you to kubernetes from a developer perspective. Y
 
 # TODO проверить красные линии и 
     default: error: error validating "/vagrant/confs/ingress.yaml": error validating data: [ValidationError(Ingress.spec.rules[0].http.paths[0].backend): unknown field "serviceName" in io.k8s.api.networking.v1.IngressBackend, ValidationError(Ingress.spec.rules[0].http.paths[0].backend): unknown field "servicePort" in io.k8s.api.networking.v1.IngressBackend]; if you choose to ignore these errors, turn validation off with --validate=false
+    Возомжно сломан и kubectl потому что все применяется а он ничего из ресурсов не видит/

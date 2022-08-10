@@ -14,5 +14,5 @@ kubectl create namespace dev
 curl https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml | sed -e 's/\( *\)- argocd-server/&\n\1- --insecure/' | kubectl apply -n argocd -f -
 # for wait process of applying
 sleep 10
-kubectl apply -f /vagrant/confs/ingress.yaml
+#kubectl apply -f /vagrant/confs/ingress.yaml
 kubectl apply -f /vagrant/confs/argo.yaml
