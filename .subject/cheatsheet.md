@@ -82,8 +82,7 @@ curl -H "Host:app2.com" 192.168.57.110
    16  curl -H "Host:app1.com" 192.168.42.110
 curl -H "Host:app1.com" 192.168.42.110 | grep LOCAL
 curl -H "Host:app1.com" 192.168.56.110 | grep LOCAL 
-k get ingress
-k get 
+
 http://192.168.56.110/applications?proj=&sync=Synced&health=&namespace=&cluster=&labels=
 
 

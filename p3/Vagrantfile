@@ -1,22 +1,28 @@
-login   = "gjigglyp"
+login   = "apearl"
 node_ip = "192.168.56.110"
 
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/focal64"
   config.vm.box_url = "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64-vagrant.box"
 
+
   config.vm.synced_folder ".", "/vagrant", disabled: false, create: true
 
   config.vm.hostname = "#{login}S"
   config.vm.network "private_network", ip: node_ip
+
+  # for Internet
   config.vm.network "forwarded_port", guest: 8080, host: 8080, protocol: "tcp"
+
+  # for application playground from subject 
   config.vm.network "forwarded_port", guest: 8888, host: 8888, protocol: "tcp"
 
 
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--name", config.vm.hostname]
-    v.customize ["modifyvm", :id, "--memory", 4096]
+    v.customize ["modifyvm", :id, "--memory", 8192]
     v.customize ["modifyvm", :id, "--cpus", 4]
   end
-  config.vm.provision "shell", privileged: false, path: "scripts/instl.sh"
+  config.vm.provision "shell", privileged: true, path: "scripts/install.sh"
+  config.vm.provision "shell", privileged: true, path: "scripts/cluster_config.sh"
 end
