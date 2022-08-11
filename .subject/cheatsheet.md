@@ -104,3 +104,29 @@ https://github.com/k3d-io/k3d/issues/36
 https://www.youtube.com/c/PowerCertAnimatedVideos
 
 server: https://127.0.0.1:6443
+
+
+
+
+
+
+
+
+
+
+
+vagrant@apearlS:/$ cd vagrant/
+vagrant@apearlS:/vagrant$ ls
+Vagrantfile  confs  scripts
+vagrant@apearlS:/vagrant$ cd confs/
+vagrant@apearlS:/vagrant/confs$ ls
+argo.yaml  ingress.yaml  manifests
+vagrant@apearlS:/vagrant/confs$ kubectl apply -f ingress.yaml 
+Error from server (NotFound): the server could not find the requested resource
+vagrant@apearlS:/vagrant/confs$ kubectl apply -f ingress.yaml -n dev
+Error from server (NotFound): the server could not find the requested resource
+vagrant@apearlS:/vagrant/confs$ kubectl apply -f ingress.yaml 
+Error from server (NotFound): the server could not find the requested resource
+vagrant@apearlS:/vagrant/confs$ Connection to 127.0.0.1 closed by remote host.
+Connection to 127.0.0.1 closed.
+apearl@at-g5 p3 % 

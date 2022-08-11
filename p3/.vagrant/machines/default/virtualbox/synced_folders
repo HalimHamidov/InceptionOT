@@ -1,1 +1,1 @@
-{"virtualbox":{"/vagrant":{"disabled":false,"create":true,"guestpath":"/vagrant","hostpath":"/Users/apearl/InceptionOTv2/p3","__vagrantfile":true}}}
+{"virtualbox":{"/vagrant_config_files":{"disabled":false,"create":true,"guestpath":"/vagrant_config_files","hostpath":"/Users/apearl/InceptionOTv2/p3","__vagrantfile":true}}}
