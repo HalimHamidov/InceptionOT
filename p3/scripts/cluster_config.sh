@@ -15,6 +15,7 @@ sudo chmod 777 /home/vagrant/.kube/config
 # In Deployment set insecure for switch off firewall and apply configs to kubernetes.
 curl https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml | sed -e 's/\( *\)- argocd-server/&\n\1- --insecure/' | kubectl apply -n argocd -f -
 # for wait process of applying
+alias k=kubectl
 sleep 10
 kubectl apply -f /vagrant_config_files/confs/ingress.yaml
 kubectl apply -f /vagrant_config_files/confs/argo.yaml
