@@ -105,16 +105,6 @@ https://www.youtube.com/c/PowerCertAnimatedVideos
 
 server: https://127.0.0.1:6443
 
-
-
-
-
-
-
-
-
-
-
 vagrant@apearlS:/$ cd vagrant/
 vagrant@apearlS:/vagrant$ ls
 Vagrantfile  confs  scripts
