@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-# cluster
+# удаляем кластер
+echo 'Удаляем кластер ...'
 k3d cluster delete mycluster
