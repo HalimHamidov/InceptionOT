@@ -21,7 +21,7 @@ spec:
           ports:
             - containerPort: 8888
 ---
-apiVersion: v
+apiVersion: v1
 kind: Service
 metadata:
   name: will-playground-service
