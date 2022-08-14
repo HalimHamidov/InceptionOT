@@ -1,4 +1,4 @@
-login   = "apearl"
+login   = "gjigglyp"
 node_ip = "192.168.56.110"
 
 Vagrant.configure("2") do |config|
@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--name", config.vm.hostname]
     v.customize ["modifyvm", :id, "--memory", 8192]
-    v.customize ["modifyvm", :id, "--cpus", 4]
+    v.customize ["modifyvm", :id, "--cpus", 8]
   end
   config.vm.provision "shell", privileged: true, path: "scripts/install.sh"
   config.vm.provision "shell", privileged: true, path: "scripts/cluster_config.sh"

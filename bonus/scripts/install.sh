@@ -31,6 +31,8 @@ sudo apt-get -y install kubectl
 
 curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
 
+sleep 10
+
 # set commands for completion
 echo 'source <(k3d completion bash)' >> ~/.bashrc
 echo 'source <(kubectl completion bash)' >> ~/.bashrc

@@ -13,20 +13,22 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "#{login}S"
   config.vm.network "private_network", ip: node_ip
 
-  # for Internet
+  # ARGOCD 
   config.vm.network "forwarded_port", guest: 8080, host: 8080, protocol: "tcp"
+  # Gitlab
   config.vm.network "forwarded_port", guest: 8081, host: 8081, protocol: "tcp"
+  # Balancer of Gitlab
   config.vm.network "forwarded_port", guest: 8082, host: 8082, protocol: "tcp"
+  # response of app
   config.vm.network "forwarded_port", guest: 8888, host: 8888, protocol: "tcp"
 
 
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--name", config.vm.hostname]
-    v.customize ["modifyvm", :id, "--memory", 4096]
+    v.customize ["modifyvm", :id, "--memory", 12288]
     v.customize ["modifyvm", :id, "--cpus", 4]
   end
 
   config.vm.provision "shell", privileged: false, path: "scripts/install.sh"
   config.vm.provision "shell", privileged: true, path: "scripts/cluster_gitlab.sh"
-  config.vm.provision "shell", privileged: true, path: "scripts/pswd.sh"
 end
